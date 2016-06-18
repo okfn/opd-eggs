@@ -1,0 +1,48 @@
+{% extends "browser/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="list-header">
+  <div class="container">
+
+            <table border="0" cellspacing="0px" cellpadding="0px">
+            <tr>
+                <td>
+
+                  <img class="thumbnail-list-label"
+                    src="{% static "" %}browser/img/label/{{label.LABEL_CD}}.jpg"
+                    title="{{label.LABEL_NM}}" alt="{{label.LABEL_NM}}"
+                    onerror="this.src='{% static 'browser/img/coming-soon.jpg' %}';"  >
+                </td>
+                <td>
+					          <h1>{{label.LABEL_NM}}</h1>
+
+                    <b>Country</b> :
+                    {% if label.LABEL_COUNTRY_ISO.COUNTRY_EU %}
+                    <img align="center" src="{% static 'browser/img/flag_16/EU.png' %}" style="padding:0px;margin:0px;" >
+                    {% endif %}
+                    <img align="center" style="padding:0px;margin:0px;"  src="{% with 'browser/img/flag_16/'|add:label.LABEL_COUNTRY_ISO.COUNTRY_ISO|add:'.png' as image_static %}{% static image_static %}{% endwith %}" >
+                    {{label.LABEL_COUNTRY_ISO.COUNTRY_NM_L}}
+                    <br>
+                    <b>Website</b> : <a href="{{label.LABEL_LINK}}" target="_blank" rel="nofollow">{{label.LABEL_LINK}}</a>
+
+                </td>
+            </tr>
+            </table>
+  </div>
+</div>
+
+
+
+<div class="list-item">
+	<div class="container">
+
+      {% if label.LABEL_WIKI_EN %}
+          <iframe src="{{label.LABEL_WIKI_EN}}"  frameBorder="0" width="100%" height="500px" >
+          </iframe>
+      {% endif %}
+
+  </div>
+</div>
+
+ {% endblock %}

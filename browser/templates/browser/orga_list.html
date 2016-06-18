@@ -1,0 +1,47 @@
+{% extends "browser/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+	<div class="page-header">
+		<h1>Organizations - Laying hens welfare</h1>
+	</div>
+
+	{% if orga_list %}
+	<section class="row">
+
+		{% regroup orga_list by ORGA_COUNTRY_ISO as country_list %}
+
+		<div class="list-item2">
+		{% for orga_list in country_list %}
+
+				<div class="col-xs-12 col-sm-12 col-md-12">
+					<h2>
+						{% if orga_list.grouper.COUNTRY_EU %}
+						<img align="center" src="{% static 'browser/img/flag_48/EU.png' %}" >
+						{% endif %}
+						<img align="center" src="{% with 'browser/img/flag_48/'|add:orga_list.grouper.COUNTRY_ISO|add:'.png' as image_static %}{% static image_static %}{% endwith %}" >
+						{{ orga_list.grouper.COUNTRY_NM_L }}
+					</h2>
+					<hr>
+				</div>
+					{% for Orga in orga_list.list %}
+					<div class="col-xs-4 col-sm-3 col-md-2">
+							<a href="{{Orga.ORGA_CD}}">
+								  <img class="thumbnail-list"
+									src="{% static "" %}browser/img/orga/Orga-{{Orga.ORGA_CD|stringformat:"06d"}}.jpg"
+									title="Orga - {{Orga.ORGA_NM}}"
+									alt="Orga - {{Orga.ORGA_NM}}"
+									onerror="this.src='{% static 'browser/img/coming-soon.jpg' %}';" >
+							</a>
+
+				  </div>
+					{% endfor %}
+			{% endfor %}
+			</div>
+
+	</section>
+	{% endif %}
+</div>
+
+{% endblock %}

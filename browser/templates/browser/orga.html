@@ -1,0 +1,49 @@
+{% extends "browser/base.html" %}
+{% load static %}
+{% block content %}
+
+
+
+<div class="list-header">
+  <div class="container">
+
+            <table border="0" cellspacing="0px" cellpadding="0px">
+            <tr>
+                <td>
+                  <img
+                    class="thumbnail-list"
+                    src="{% static "" %}browser/img/orga/Orga-{{orga.ORGA_CD|stringformat:"06d"}}.jpg"
+                    title="{{orga.ORGA_NM}}" alt="{{orga_detail.ORGA_NM}}"
+                    onerror="this.src='{% static 'browser/img/coming-soon.jpg' %}';"  >
+                </td>
+                <td>
+                    <h1>{{orga.ORGA_NM}}</h1>
+
+                    <b>Country</b> :
+                    {% if orga.ORGA_COUNTRY_ISO.COUNTRY_EU %}
+        						<img align="center" src="{% static 'browser/img/flag_16/EU.png' %}" style="padding:0px;margin:0px;" >
+        						{% endif %}
+        						<img align="center" style="padding:0px;margin:0px;"  src="{% with 'browser/img/flag_16/'|add:orga.ORGA_COUNTRY_ISO.COUNTRY_ISO|add:'.png' as image_static %}{% static image_static %}{% endwith %}" >
+                    {{orga.ORGA_COUNTRY_ISO.COUNTRY_NM_L}}
+                    <br>
+                    <b>Website</b> : <a href="{{orga.ORGA_LINK}}" target="_blank" rel="nofollow">{{orga.ORGA_LINK}}</a>
+
+                </td>
+            </tr>
+            </table>
+  </div>
+</div>
+
+
+<div class="list-item">
+	<div class="container">
+{% if orga.ORGA_WIKI_EN %}
+    <iframe src="{{orga.ORGA_WIKI_EN}}"  frameBorder="0" width="100%" height="500px" >
+    </iframe>
+{% endif %}
+
+  </div>
+</div>
+
+
+ {% endblock %}

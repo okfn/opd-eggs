@@ -1,0 +1,82 @@
+{% extends "browser/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+		<div class="row featurette">
+        <div class="col-md-7 col-md-push-5">
+					<p style="margin-top:40px;">This website is a prototype to demonstrate that barcode can be used as an effective tool for individual consumers
+			      to make informed purchase decision beyond the messages manufactures and marketers put in front of us. Barcodes can be a <b>new communication channel</b>  between consumers and non-profit organizations.
+			      My first attempt is to focus on eggs.
+			      This prototype offers consumers to choose eggs based on the welfare of the laying hens through 3 categories. : Cage Farming, Cage free and Free Range.</p>
+          <p><a  class="btn btn-primary btn-lg" href="{% url 'browser:brand_list' %}" role="button">Browse products by brands !</a></p>
+          <p >Or use the code printed just below the barcode (8, 12 or 13 digits). You can also scan the barcode with your smartphone (see below).</p>
+
+					<form class="form-search" action="{% url 'browser:search' %}" method="post">
+						{% csrf_token %}
+		        <input name="gtin" type="text" class="form-control" placeholder="Example : 7610807125825" required="" autofocus="">
+		        <button class="btn btn-lg btn-primary" type="submit">></button>
+		      </form>
+					{% if error_message %}<p>{{ error_message }}</p>{% endif %}
+					<br>
+
+        </div>
+        <div class="col-md-5 col-md-pull-7">
+          <img class="featurette-image img-responsive center-block" data-src="holder.js/400x400/auto" alt="Open Product Data" src="{% static 'browser/img/logo-egg-scan-project.jpg' %}" data-holder-rendered="true">
+        </div>
+    </div>
+</div>
+
+
+
+
+    <div class="container marketing" align="center">
+
+      <!-- Three columns of text below the carousel -->
+      <div class="row">
+        <div class="col-lg-4">
+					<a  href="{% url 'browser:brand_list' %}" >
+          	<img class="img-circle" src="{% static 'browser/img/egg-box.jpg' %}" alt="Generic placeholder image" width="140" height="140">
+					</a>
+					<h2>Brands</h2>
+					<p>List of egg brands per countries and products for each brand</p>
+
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+					<a  href="{% url 'browser:label_list' %}" >
+          	<img class="img-circle" src="{% static 'browser/img/egg-label.jpg' %}" alt="Generic placeholder image" width="140" height="140">
+					</a>
+					<h2>Labels</h2>
+					<p>Labels printed on eggs boxes related to animal welfare and egg's quality</p>
+
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+					<a href="{% url 'browser:orga_list' %}" >
+          	<img class="img-circle" src="{% static 'browser/img/egg-orga.jpg' %}" alt="Generic placeholder image" width="140" height="140">
+					</a>
+					<h2>Organizations</h2>
+					<p>List of animal welfare organizations concerned by farming</p>
+
+        </div><!-- /.col-lg-4 -->
+      </div><!-- /.row -->
+
+
+</div>
+
+
+<div class="container">
+	<div class="row">
+    <div class="col-md-7 col-md-push-5">
+			<h2 class="featurette-heading">Use the smartphone App <a href="https://play.google.com/store/apps/details?id=com.google.zxing.client.android">barcode scanner</a> ! </h2>
+				<p>
+			Go in <i>settings</i> -> <i>Custom search URL</i> and enter the following value:	<br>
+			<strong>https://egg-scan.herokuapp.com/search/%s</strong> </p>
+		</div>
+		<div class="col-md-5 col-md-pull-7">
+			<img class="featurette-image img-responsive center-block" data-src="holder.js/100x100/auto" alt="" src="{% static 'browser/img/logo_barcode_scanner.png' %}" data-holder-rendered="true">
+		</div>
+	</div>
+
+</div>
+
+{% endblock %}

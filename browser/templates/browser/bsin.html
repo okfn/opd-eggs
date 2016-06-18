@@ -1,0 +1,147 @@
+{% extends "browser/base.html" %}
+{% load static %}
+{% load browser_extras %}
+{% block content %}
+
+
+<div class="list-header">
+      <div class="container">
+
+          <table border="0" cellspacing="0px" cellpadding="0px">
+          <tr>
+              <td>
+    						<img class="thumbnail-list"
+                src="{% static "" %}browser/img/brand/{{bsin_detail.BSIN}}.jpg"
+                title="{{bsin_detail.BRAND_NM}}"
+                alt="{{bsin_detail.BRAND_NM}}"
+                onerror="this.src='/static/browser/img/coming-soon.jpg';">
+              </td>
+  		        <td>
+                  <h1>{{bsin_detail.BRAND_NM}}</h1>
+  			          <b>Brand name</b> : {{bsin_detail.BRAND_NM}}<br>
+                  <b>Brand type</b> : {{bsin_detail.BRAND_TYPE_CD.BRAND_TYPE_NM}}<br>
+                  {% if bsin_detail.OWNER_CD %}
+                  <b>Owner</b> : <a  href="./../owner/{{bsin_detail.OWNER_CD.OWNER_CD|stringformat:"06d"}}" >{{bsin_detail.OWNER_CD.OWNER_NM}}</a><br><br>
+                  {% endif %}
+                  <b>Website</b> : <a href="{{bsin_detail.BRAND_LINK}}" target="_blank" rel="nofollow">{{bsin_detail.BRAND_LINK}}</a>
+              </td>
+            </tr>
+          </table>
+
+  </div>
+</div>
+
+
+
+
+<div class="list-item">
+	<div class="container">
+
+        {% if gtin_list %}
+
+  		      {% for Gtin in gtin_list %}
+          	<div itemscope itemtype="http://schema.org/Product">
+
+                 <h2>
+                   {{bsin_detail.BRAND_NM}} {{Gtin.GRADE_CD.GRADE_SHORT_NM}} {{Gtin.SIZE_CD.SIZE_SHORT_NM}} {{Gtin.COLOR_CD.COLOR_NM}} {{Gtin.FED_CD.FED_NM}} - {{Gtin.PKG_UNIT}} CT
+                </h2>
+
+                  <table>
+                      <tr>
+                          <td width="250px">
+                              <a  href="{% url 'browser:gtin' Gtin.GTIN_ID %}" >
+
+                								<img itemprop="image"
+                                  {% if Gtin.BSIN.BRAND_COUNTRY_ISO.COUNTRY_ISO = "US" %}
+                									class="thumbnail-list"
+                                  {% else %}
+                                  class="thumbnail-list-gtin"
+                                  {% endif %}
+                                  src="{% static "" %}browser/img/gtin-target/{{Gtin.GTIN_ID}}.jpg"
+                                  onerror="this.src='/static/browser/img/coming-soon.jpg';">
+                							</a>	<!-- / UPC -->
+
+                              {% if Gtin.METHOD_CD %}
+
+                                {% if Gtin.METHOD_CD.METHOD_LEVEL_CD == 0 %}<div class="method-level-0" >{% endif %}
+                                {% if Gtin.METHOD_CD.METHOD_LEVEL_CD == 1 %}<div class="method-level-1" >{% endif %}
+                                {% if Gtin.METHOD_CD.METHOD_LEVEL_CD == 2 %}<div class="method-level-2" >{% endif %}
+                                {% if Gtin.METHOD_CD.METHOD_LEVEL_CD == 3 %}<div class="method-level-3" >{% endif %}
+
+                                <b>{{Gtin.METHOD_CD.METHOD_NM}}</b>
+                                </div>
+                              {% endif %}
+                          </td>
+                          <td>
+
+                                    <table>
+                                      <tr><td width="250px"></td><td></td></tr>
+                                      <tr><td><b>ID</b></td><td>{{Gtin.GTIN_ID}}</td></tr>
+                                      {% if SHOW_GTIN %}
+                                          {% if Gtin.GTIN_CD %}
+                                              <tr><td>
+                                                  <b>GTIN-13 / EAN-13
+                                                  {% if Gtin.GTIN_CD|slice:":2" = "93" %}
+                                                   / APN
+                                                  {% endif %}
+                                                  </b></td><td><span class="gtin-code" itemprop="gtin13" >{{Gtin.GTIN_CD}}</span></td></tr>
+                                                  {% if Gtin.GTIN_CD|slice:":1" = "0" %}
+                                                    {% if Gtin.GTIN_CD|slice:":5" = "00000" %}
+                                                      <tr><td><b>GTIN-8 / EAN-8</b></td><td><span class="gtin-code" itemprop="gtin13" >{{ Gtin.GTIN_CD|slice:"5:13" }}</span></td></tr>
+                                                    {% else %}
+                                                      <tr><td><b>GTIN-12 / UPC</b></td><td><span class="gtin-code" itemprop="gtin13" >{{ Gtin.GTIN_CD|slice:"1:13" }}</span></td></tr>
+                                                    {% endif %}
+                                                  {% endif %}
+                                              </td></tr>
+                                          {% else %}
+                                            <tr><td><b>GTIN-13 / EAN-13</td><td><span style="color:red;">NO GTIN</span></td></tr>
+                                          {% endif %}
+
+                                          {% if Gtin.GCP_CD %}
+                                          <tr><td width ="150px"><b>GCP</b></td><td><img align="center" src="{% with 'browser/img/flag_16/'|add:Gtin.GCP_CD.GLN_COUNTRY_ISO_CD|add:'.png' as image_static %}{% static image_static %}{% endwith %}" >
+                                          <span class="gtin-code">{{Gtin.GCP_CD.GCP_CD}}</span></td></tr>
+                                          {% endif %}
+                                      {% else %}
+                                        {% if Gtin.GTIN_CD %}
+                                          <!--<tr><td><b>Barcode</b></td><td><b><span style="color:green;">Yes</span></b></td></tr>-->
+                                        {% else %}
+                                          <tr><td><b>Barcode</b></td><td><b<span style="color:red;">No (please email me if you know the barcode)</span></b></td></tr>
+                                        {% endif %}
+                                      {% endif %}
+
+                                      <tr><td><b>Brand</b></td><td>{{bsin_detail.BRAND_NM}}</td></tr>
+                                      <tr><td><b>Number of unit</b></td><td>{{Gtin.PKG_UNIT}}</td></tr>
+                                      <tr><td><b>Type</b></td><td>{{Gtin.CAT_CD.CAT_NM}}</td></tr>
+                                      <tr><td><b>Grade</b></td><td>{{Gtin.GRADE_CD.GRADE_NM}}</td></tr>
+                                      <tr><td><b>Size</b></td><td>{{Gtin.SIZE_CD.SIZE_NM}}</td></tr>
+                                      <tr><td><b>Color</b></td><td>{{Gtin.COLOR_CD.COLOR_NM}}</td></tr>
+                                      <tr><td><b>Production method</b></td><td>{{Gtin.METHOD_CD.METHOD_NM}}</td></tr>
+                                      <tr><td><b>Packaging</b></td><td>{{Gtin.PACKAGING_CD.PACKAGING_NM}}</td></tr>
+
+                                    </table>
+
+                                    <br>
+                                    <span itemprop="description">
+                                    </span>
+                          </td>
+                          <td style="padding-left:60px;">
+                            {% for Label in Gtin.LABEL_CD.all %}
+                              <img itemprop="image" width="80px" height="80px" style="margin-right:10px;"
+                              src="{% static "" %}browser/img/label/{{Label.LABEL_CD}}.jpg"
+                              >
+                            {% endfor %}
+                          </td>
+                      </tr>
+                  </table>
+              </div>
+
+              <hr>
+              {% endfor %}
+
+      	{% else %}
+      	<p>No products for this brand</p>
+        {% endif %}
+</div>
+</div>
+
+{% endblock %}

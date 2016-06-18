@@ -1,0 +1,64 @@
+{% extends "browser/base.html" %}
+{% load static %}
+{% block content %}
+
+
+
+<div class="list-header">
+  <div class="container">
+
+            <table border="0" cellspacing="0px" cellpadding="0px">
+            <tr>
+                <td>
+                  <img class="thumbnail-list"
+                    src="{% static "" %}browser/img/owner/{{owner_detail.OWNER_CD|stringformat:"06d"}}.jpg"
+                    title="{{owner_detail.OWNER_NM}}" alt="{{owner_detail.OWNER_NM}}"
+                    onerror="this.src='{% static 'browser/img/coming-soon.jpg' %}';"  >
+                </td>
+                <td>
+                    <h1>{{owner_detail.OWNER_NM}}</h1>
+                    <b>Website</b> : <a href="{{owner_detail.OWNER_LINK}}" target="_blank" rel="nofollow">{{owner_detail.OWNER_LINK}}</a>
+
+                </td>
+            </tr>
+            </table>
+  </div>
+</div>
+
+
+<div class="list-item">
+  <div class="container">
+
+
+  	    <table  width="100%">
+          <tr>
+            <td align="top">
+              {% if brand_list %}
+              {% for Brand in brand_list %}
+            	 <a href="./../brand/{{Brand.BSIN}}" >
+                <img class="thumbnail-list"
+                    src="{% static "" %}browser/img/brand/{{Brand.BSIN}}.jpg"
+                    alt="{{Brand.BRAND_NM}}"
+                    title="{{Brand.BRAND_NM}}"
+                    onerror="this.src='{% static 'browser/img/coming-soon.jpg' %}';"  >
+                </a>
+                <br>
+                {% endfor %}
+                {% endif %}
+              </td>
+              <td  width="100%">
+                {% if owner_detail.OWNER_WIKI_EN %}
+                    <iframe src="{{owner_detail.OWNER_WIKI_EN}}"  frameBorder="0" width="100%" height="500px" >
+                    </iframe>
+                {% endif %}
+
+              </td>
+          </tr>
+        </table>
+
+
+  </div>
+</div>
+
+
+ {% endblock %}

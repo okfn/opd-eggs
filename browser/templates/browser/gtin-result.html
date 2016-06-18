@@ -1,0 +1,16 @@
+{% extends "browser/base.html" %}
+{% load static %}
+{% load browser_extras %}
+{% block content %}
+
+  {% if gtin_list.count > 0 %}
+
+    {% for gtin in gtin_list %}
+      {% include "browser/gtin.html" %}
+    {% endfor %}
+
+    {{gtin_list.count}} Result
+
+  {% endif %}
+
+{% endblock %}

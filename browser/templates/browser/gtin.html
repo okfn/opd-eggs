@@ -1,0 +1,168 @@
+{% extends "browser/base.html" %}
+{% load static %}
+{% load browser_extras %}
+{% block content %}
+
+
+
+<div class="container">
+  <div class="page-header">
+    <h1>{{gtin.BSIN.BRAND_NM}} {{gtin.SIZE_CD.SIZE_SHORT_NM}} {{gtin.COLOR_CD.COLOR_NM}} {{gtin.FED_CD.FED_NM}} - {{gtin.PKG_UNIT}} CT</h1>
+  </div>
+</div>
+
+<div class="list-item">
+	<div class="container" itemscope itemtype="http://schema.org/Product">
+
+        <h2>Product description</h2>
+        {% if gtin.METHOD_CD %}
+
+          {% if gtin.METHOD_CD.METHOD_LEVEL_CD == 0 %}<div class="method-level-0" >{% endif %}
+          {% if gtin.METHOD_CD.METHOD_LEVEL_CD == 1 %}<div class="method-level-1" >{% endif %}
+          {% if gtin.METHOD_CD.METHOD_LEVEL_CD == 2 %}<div class="method-level-2" >{% endif %}
+          {% if gtin.METHOD_CD.METHOD_LEVEL_CD == 3 %}<div class="method-level-3" >{% endif %}
+
+          <b>{{gtin.METHOD_CD.METHOD_NM}}</b>
+          </div>
+        {% endif %}
+        <div>
+            <img itemprop="image"
+              {% if gtin.BSIN.BRAND_COUNTRY_ISO.COUNTRY_ISO = "US" %}
+              class="thumbnail-list"
+              {% else %}
+              class="thumbnail-list-gtin"
+              {% endif %}
+              src="{% static "" %}browser/img/gtin-target/{{gtin.GTIN_ID}}.jpg"
+              onerror="this.src='/static/browser/img/coming-soon.jpg';">
+        </div>
+
+        <div>
+          <table>
+
+            <tr><td width ="200px"></td></tr>
+            {% if SHOW_GTIN %}
+              <tr><td><b>GTIN-13 / EAN-13</b></td><td><span class="gtin-code" itemprop="gtin13" >{{gtin.GTIN_CD}}</span></td></tr>
+              {% if gtin.GTIN_CD|slice:":1" = "0" %}
+                {% if gtin.GTIN_CD|slice:":5" = "00000" %}
+                  <tr><td><b>GTIN-8 / EAN-8</b></td><td><span class="gtin-code" itemprop="gtin13" >{{ gtin.GTIN_CD|slice:"5:13" }}</span></td></tr>
+                {% else %}
+                  <tr><td><b>GTIN-12 / UPC</b></td><td><span class="gtin-code" itemprop="gtin13" >{{ gtin.GTIN_CD|slice:"1:13" }}</span></td></tr>
+                {% endif %}
+              {% endif %}
+              </td></tr>
+              {% if gtin.GCP_CD %}
+              <tr><td><b>GCP</b></td><td><img align="center" src="{% with 'browser/img/flag_16/'|add:gtin.GCP_CD.GLN_COUNTRY_ISO_CD|add:'.png' as image_static %}{% static image_static %}{% endwith %}" >
+              <span class="gtin-code">{{gtin.GCP_CD.GCP_CD}}</span></td></tr>
+              {% endif %}
+            {% else %}
+              {% if Gtin.GTIN_CD %}
+                <!--<tr><td><b>Barcode</b></td><td><b><span style="color:green;">Yes</span></b></td></tr>-->
+              {% else %}
+                <tr><td><b>Barcode</b></td><td><b<span style="color:red;">No (please email me if you know the barcode)</span></b></td></tr>
+              {% endif %}
+            {% endif %}
+            <tr><td><b>Number of unit</b></td><td>{{gtin.PKG_UNIT}}</td></tr>
+            <tr><td><b>Type</b></td><td>{{gtin.CAT_CD.CAT_NM}}</td></tr>
+            <tr><td><b>Grade</b></td><td>{{gtin.GRADE_CD.GRADE_NM}}</td></tr>
+            <tr><td><b>Size</b></td><td>{{gtin.SIZE_CD.SIZE_NM}}</td></tr>
+            <tr><td><b>Color</b></td><td>{{gtin.COLOR_CD.COLOR_NM}}</td></tr>
+            <tr><td><b>Production method</b></td><td>{{gtin.METHOD_CD.METHOD_NM}}</td></tr>
+            <tr><td><b>Packaging</b></td><td>{{gtin.PACKAGING_CD.PACKAGING_NM}}</td></tr>
+          </table>
+          </div>
+
+          <hr>
+
+          {% if gtin.BSIN.BRAND_COUNTRY_ISO.COUNTRY_ISO = "US" %}
+          <div class="well">
+            <h2>What are egg grades?</h2>
+            <p>There are three consumer grades for eggs: U.S. Grade AA, A, and B. The grade is determined by the interior quality of the egg and the appearance and condition of the egg shell. Eggs of any quality grade may differ in weight (size).
+            </p><p>
+              U.S. Grade AA eggs have whites that are thick and firm; yolks that are high, round, and practically free from defects; and clean, unbroken shells. Grade AA and Grade A eggs are best for frying and poaching where appearance is important.
+            </p><p>  U.S. Grade A eggs have characteristics of Grade AA eggs except that the whites are "reasonably" firm. This is the quality most often sold in stores.
+            </p><p>  U.S. Grade B eggs have whites that may be thinner and yolks that may be wider and flatter than eggs of higher grades. The shells must be unbroken, but may show slight stains. This quality is seldom found in retail stores because they are usually used to make liquid, frozen, and dried egg products.
+            </p>
+          </div>
+          {% endif %}
+
+    			<h2>Brand</h2>
+
+          <div itemprop="brand" itemscope itemtype="http://schema.org/Brand">
+              <div>
+                <a href="{% url 'browser:bsin' gtin.BSIN.BSIN %}" >
+                  <img itemprop="logo"
+                    class="thumbnail-list"
+                    src="{% static "" %}browser/img/brand/{{gtin.BSIN.BSIN}}.jpg"
+                    alt="{{gtin.BSIN.BRAND_NM}} BSIN {{gtin.BSIN.BRAND_CD}}"
+                    title="{{gtin.BSIN.BRAND_NM}} BSIN {{gtin.BSIN.BRAND_CD}}"
+                    onerror="this.src='/static/browser/img/coming-soon.jpg';">
+                </a>
+              </div>
+              <div>
+                {% if gtin.BSIN.BRAND_NM %}  <b>Brand</b> : <span itemprop="name"><a href="{% url 'browser:bsin' gtin.BSIN.BSIN %}" >{{gtin.BSIN.BRAND_NM}}</a> </span><br> {% else %} The brand will be assigned soon... <br>{% endif %}
+                {% if gtin.BSIN.OWNER_CD.OWNER_NM %}  <b>Owner</b> : <a href="{% url 'browser:owner' gtin.BSIN.OWNER_CD.OWNER_CD %}" >{{gtin.BSIN.OWNER_CD.OWNER_NM}}</a><br> {% endif %}
+                {% if gtin.BSIN.BRAND_LINK %}  <b>Website</b> : <span itemprop="url"> <a href="{{gtin.BSIN.BRAND_LINK}}" target="_blank" rel="nofollow">{{gtin.BSIN.BRAND_LINK}}</a> </span><br> {% endif %}
+              </div>
+          </div>
+
+          <hr>
+
+          {% if gtin.LABEL_CD.count > 0 %}
+
+      			<h2>Labels</h2>
+
+            {% for Label in gtin.LABEL_CD.all %}
+            <a href="{% url 'browser:label' Label.LABEL_CD %}">
+              <img itemprop="image" width="80px" height="80px" style="margin-right:10px;"
+              src="{% static "" %}browser/img/label/{{Label.LABEL_CD}}.jpg"
+              >
+            </a>
+          {% endfor %}
+
+          <hr>
+
+          {% endif %}
+    			<h2>Supply chain</h2>
+          <div itemprop="manufacturer" itemscope itemtype="http://schema.org/Organization">
+
+              {% if gtin.GCP_CD.RETURN_CODE.RETURN_CODE == '0' %}
+
+                  {% if gtin.GCP_CD.GLN_CD %}
+
+                    <b>GLN Name</b> : <span itemprop="name" >{{gtin.GCP_CD.GLN_NM}}</span><br>
+                    <b>GLN Code</b> : <span class="gtin-code" >{{gtin.GCP_CD.GLN_CD}}</span><br>
+                    <div itemprop="address" itemscope itemtype="http://schema.org/PostalAddress">
+                      <span itemprop="streetAddress">
+                        {{ gtin.GCP_CD.GLN_ADDR_02}}
+                        {{ gtin.GCP_CD.GLN_ADDR_03}}
+                        {{ gtin.GCP_CD.GLN_ADDR_04}}
+                      </span><br>
+                      <span itemprop="postalCode">{{ gtin.GCP_CD.GLN_ADDR_POSTALCODE}}</span>
+                      <span itemprop="addressLocality">{{ gtin.GCP_CD.GLN_ADDR_CITY}}</span>
+                      <span itemprop="addressCountry">{{gtin.GCP_CD.GLN_COUNTRY_ISO_CD}}</span>
+                      <br>
+                    </div>
+                  {% else %}
+                    GLN data will be assigned soon...
+                  {% endif %}
+                  <br>
+                  Source : <a href="http://gepir.gs1.org/v32/xx/about.aspx?Lang=en-US" target="_blank" rel="nofollow">GEPIR</a>
+                  <br><br>
+
+        			{% else %}
+
+        					GEPIR doesn't contain data for this GTIN<br> -> Return Code {{gtin.GCP_CD.RETURN_CODE.RETURN_CODE }}
+        					( {{gtin.GCP_CD.RETURN_CODE.RETURN_NAME }} )
+                  <br><br>
+
+              {% endif %}
+
+          </div>
+
+	</div>
+</div>
+
+
+
+
+ {% endblock %}

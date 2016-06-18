@@ -1,0 +1,39 @@
+{% extends "browser/base.html" %}
+{% load static %}
+{% load browser_extras %}
+{% block content %}
+
+<div class="container">
+  <div class="page-header">
+    <h1>About</h1>
+  </div>
+  <div class="reader">
+
+
+    <p>This website is a prototype to demonstrate that barcode can be used as an effective tool for individual consumers
+      to make informed purchase decision beyond the messages manufactures and marketers put in front of us. Barcodes can be a <b>new communication channel</b>  between consumers and non-profit organizations.
+      My first attempt is to focus on eggs.
+      This prototype offers consumers to choose eggs based on the welfare of the laying hens through 3 categories. : Cage Farming, Cage free and Free Range.</p>
+
+      <img src="{% static 'browser/img/eggs-barcode-communication-channel.jpg' %}">
+
+      <p>
+        Each product is defined by the following criteria:<br>
+      -       Brand<br>
+      -       Type of Eggs (only chicken eggs for the moment),<br>
+      -       Number of units per pack,<br>
+      -       Packaging material (carton, plastic, polystyrene),<br>
+      -       Size of the Egg  (according to the regulation of the country),<br>
+      -       Color (brown or white, which is important in the US),<br>
+      -       Grade (for US and Europe),<br>
+      -       Production method (e.g. Cage farming, Cage Free or Deep litter indoor housing, Free Range). <br>
+
+    </p>
+
+
+    </p>
+
+  </div>
+</div>
+
+{% endblock %}

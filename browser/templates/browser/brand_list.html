@@ -1,0 +1,51 @@
+{% extends "browser/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+	<div class="page-header">
+		<h1>Select a brand to see its products</h1>
+	</div>
+
+{% if page_brand_list %}
+<section class="row">
+
+	{% regroup page_brand_list by BRAND_COUNTRY_ISO as country_list %}
+
+	<div class="list-item2">
+	{% for page_brand_list in country_list %}
+
+			<div class="col-xs-12 col-sm-12 col-md-12">
+				<h2>
+					{% if page_brand_list.grouper.COUNTRY_EU %}
+					<img align="center" src="{% static 'browser/img/flag_48/EU.png' %}" >
+					{% endif %}
+					<img align="center" src="{% with 'browser/img/flag_48/'|add:page_brand_list.grouper.COUNTRY_ISO|add:'.png' as image_static %}{% static image_static %}{% endwith %}" >
+					{{ page_brand_list.grouper.COUNTRY_NM_L }}
+				</h2>
+				<hr>
+			</div>
+				{% for Brand in page_brand_list.list %}
+					<div class="col-xs-6 col-sm-3 col-md-2">
+
+						<a href="{{ Brand.BSIN }}">
+							<img 	class="thumbnail-list"
+										src="{% static "" %}browser/img/brand/{{Brand.BSIN}}.jpg"
+										title="Brand - {{ Brand.BRAND_NM }}"
+										alt="Brand - {{ Brand.BRAND_NM }}"
+										width="150" height="150"
+							 >
+							 <!-- 							onerror="this.src='{% static 'browser/img/coming-soon.jpg' %}';" -->
+						</a>
+					</div>
+			  {% endfor %}
+
+	{% endfor %}
+	</div>
+</section>
+{% else %}
+	<p>No brands are available.</p>
+{% endif %}
+</div>
+</div>
+{% endblock %}

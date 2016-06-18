@@ -1,0 +1,47 @@
+{% extends "browser/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+	<div class="page-header">
+		<h1>Browse by Owners</h1>
+	</div>
+
+	{% if owner_list %}
+	<section class="row">
+
+		{% regroup owner_list by OWNER_COUNTRY_ISO as country_list %}
+
+		<div class="list-item2">
+		{% for owner_list in country_list %}
+
+				<div class="col-xs-12 col-sm-12 col-md-12">
+					<h2>
+						{% if owner_list.grouper.COUNTRY_EU %}
+						<img align="center" src="{% static 'browser/img/flag_48/EU.png' %}" >
+						{% endif %}
+						<img align="center" src="{% with 'browser/img/flag_48/'|add:owner_list.grouper.COUNTRY_ISO|add:'.png' as image_static %}{% static image_static %}{% endwith %}" >
+						{{ owner_list.grouper.COUNTRY_NM_L }}
+					</h2>
+					<hr>
+				</div>
+					{% for Owner in owner_list.list %}
+					<div class="col-xs-4 col-sm-3 col-md-2">
+							<a href="{{Owner.OWNER_CD|stringformat:"06d"}}">
+								  <img class="thumbnail-list"
+									src="{% static "" %}browser/img/owner/{{Owner.OWNER_CD|stringformat:"06d"}}.jpg"
+									title="Owner - {{Owner.OWNER_NM}}"
+									alt="Owner - {{Owner.OWNER_NM}}"
+									onerror="this.src='{% static 'browser/img/coming-soon.jpg' %}';" >
+							</a>
+							<p>{{Owner.OWNER_NM}}</p>
+				  </div>
+					{% endfor %}
+			{% endfor %}
+			</div>
+
+	</section>
+	{% endif %}
+</div>
+
+{% endblock %}

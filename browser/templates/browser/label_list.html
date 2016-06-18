@@ -1,0 +1,47 @@
+{% extends "browser/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+	<div class="page-header">
+		<h1>Labels</h1>
+	</div>
+
+	{% if label_list %}
+	<section class="row">
+
+		{% regroup label_list by LABEL_COUNTRY_ISO as country_list %}
+
+		<div class="list-item2">
+		{% for label_list in country_list %}
+
+				<div class="col-xs-12 col-sm-12 col-md-12">
+					<h2>
+						{% if label_list.grouper.COUNTRY_EU %}
+						<img align="center" src="{% static 'browser/img/flag_48/EU.png' %}" >
+						{% endif %}
+						<img align="center" src="{% with 'browser/img/flag_48/'|add:label_list.grouper.COUNTRY_ISO|add:'.png' as image_static %}{% static image_static %}{% endwith %}" >
+						{{ label_list.grouper.COUNTRY_NM_L }}
+					</h2>
+					<hr>
+				</div>
+					{% for Label in label_list.list %}
+					<div class="col-xs-4 col-sm-3 col-md-2">
+							<a href="{{Label.LABEL_CD}}">
+								  <img class="thumbnail-list-label"
+									src="{% static "" %}browser/img/label/{{Label.LABEL_CD}}.jpg"
+									title="Label - {{Label.LABEL_NM}}"
+									alt="Label - {{Label.LABEL_NM}}"
+									onerror="this.src='{% static 'browser/img/coming-soon.jpg' %}';" >
+							</a>
+							<!-- <p>{{Label.LABEL_NM}}</p> -->
+				  </div>
+					{% endfor %}
+			{% endfor %}
+			</div>
+
+	</section>
+	{% endif %}
+</div>
+
+{% endblock %}
